@@ -1,6 +1,6 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
-const cTable = require('console.table');
+require('console.table');
 
 const connection = mysql.createConnection({
   host: "localhost",
@@ -19,7 +19,7 @@ const connection = mysql.createConnection({
 connection.connect(function(err) {
   if (err) throw err;
   console.log("Successful connection to sql!");
-  employeetrackermenu;
+  employeetrackermenu ();
 });
 
 function employeetrackermenu() {
@@ -77,9 +77,25 @@ function employeetrackermenu() {
 }
 
 function AllEmployees () {
-  connection.query("SELECT * FROM employees", function(err, res) {
+  connection.query("SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary FROM employee LEFT JOIN role ON employee.role_id=role.id LEFT JOIN department ON role.department_id=department.id", function(err, res) {
     if (err) throw err; 
-    console.table(['First Name', 'Last Name'], res);
+    console.table(res);
+    employeetrackermenu();
+  });
+}
+
+function AllDepartments () {
+  connection.query("SELECT * FROM department", function(err, res) {
+    if (err) throw err; 
+    console.table(res);
+    employeetrackermenu();
+  });
+}
+
+function AllRoles () {
+  connection.query("SELECT * FROM role", function(err, res) {
+    if (err) throw err; 
+    console.table(res);
     employeetrackermenu();
   });
 }
