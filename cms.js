@@ -39,7 +39,7 @@ function employeetrackermenu() {
         "View All Roles",
         "Add Role",
         // "Remove Role",
-        "View All Deparments",
+        "View All Departments",
         "Add Department"        
       ]
     })
@@ -67,6 +67,7 @@ function employeetrackermenu() {
         
       case "View All Departments":
         AllDepartments();
+        console.log("Getting all department");
         break;
 
       case "Add Department":
@@ -84,10 +85,13 @@ function AllEmployees () {
   });
 }
 
+//buggy - freezes up terminal
 function AllDepartments () {
   connection.query("SELECT * FROM department", function(err, res) {
     if (err) throw err; 
+    console.log(res);
     console.table(res);
+    console.log("going to employee tracker menu")
     employeetrackermenu();
   });
 }
@@ -99,3 +103,13 @@ function AllRoles () {
     employeetrackermenu();
   });
 }
+
+// function AddEmployee () {
+//   connection.query("INSERT ")
+// }
+
+// function AddRole
+// function AddDepartment
+
+// //prompt which employee? list first_name and last_name
+// function UpdateEmployeeRole
