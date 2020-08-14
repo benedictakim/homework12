@@ -1,5 +1,6 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
+const { resolveNaptr } = require("dns");
 require('console.table');
 
 const connection = mysql.createConnection({
@@ -18,7 +19,7 @@ const connection = mysql.createConnection({
 
 connection.connect(function(err) {
   if (err) throw err;
-  console.log("Successful connection to sql!");
+  console.log("=====Welcome to the Employee Tracker!=====");
   employeetrackermenu ();
 });
 
@@ -85,13 +86,10 @@ function AllEmployees () {
   });
 }
 
-//buggy - freezes up terminal
 function AllDepartments () {
   connection.query("SELECT * FROM department", function(err, res) {
     if (err) throw err; 
-    console.log(res);
     console.table(res);
-    console.log("going to employee tracker menu")
     employeetrackermenu();
   });
 }
@@ -104,9 +102,47 @@ function AllRoles () {
   });
 }
 
-// function AddEmployee () {
-//   connection.query("INSERT ")
-// }
+function AddEmployee () {
+  inquirer
+   .prompt([
+    {name: "first_name",
+    type: "input",
+    message: "What is the employee's FIRST NAME?"
+    },
+    {name: "last_name",
+    type: "input",
+    message: "What is the employee's LAST NAME?"
+    }
+    // {name: "title",
+    // type: "rawlist",
+    // message: "What is the employee's ROLE?",
+    // choices: async function() {
+    //   let choiceArray = []
+    //   await connection.query("SELECT title FROM role", function (err, res) {
+    //     if (err) throw err;
+    //     return(res);
+    //     console.log(res)   
+    //   });
+    //   return await choiceArray
+    // }    
+   ])
+  .then(function(answer) {
+    "INSERT INTO employee SET ?",
+    {
+      first_name: answer.first_name,
+      last_name: answer.last_name,
+      // role_id: answer.title
+    },
+    // console.log(anwer.first_name)
+    // console.log(answer.last_name)
+    function (err) {
+      if (err) throw err;
+      console.log("The employee ${first_name} was added successfully!");
+      // return to main menu
+      employeetrackermenu();
+    };
+  });
+};
 
 // function AddRole
 // function AddDepartment
